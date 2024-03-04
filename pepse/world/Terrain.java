@@ -19,7 +19,8 @@ public class Terrain {
         this.groundHeightAtX0 = windowDimensions.y()*(2f/3f);
         this.windowDimensions = windowDimensions;
     }
-    public float groundHeightAt(float x) { return groundHeightAtX0; }
+    public float groundHeightAt(float x) {
+        return groundHeightAtX0; }
 
     public List<Block> createInRange(int minX, int maxX) {
         List<Block> blocks = new ArrayList<>();
