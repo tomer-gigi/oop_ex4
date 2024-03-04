@@ -15,7 +15,7 @@ public class Terrain {
     float groundHeightAtX0;
     private final Vector2 windowDimensions;
 
-    public Terrain(Vector2 windowDimensions, int seed){
+    public Terrain( Vector2 windowDimensions, int seed){
         this.groundHeightAtX0 = windowDimensions.y()*(2f/3f);
         this.windowDimensions = windowDimensions;
     }
