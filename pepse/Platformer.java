@@ -9,6 +9,7 @@ import danogl.util.Vector2;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * A simple platformer demo with a circle as an avatar and a few platforms.
@@ -37,8 +38,9 @@ public class Platformer extends GameManager {
         placePlatform(Vector2.of(-512, 700), Vector2.of(1024, 50));
         placePlatform(Vector2.of(-256, 400), Vector2.of(512, 50));
         placePlatform(Vector2.of(-128, 100), Vector2.of(256, 50));
+        //todo: note I changed this function because Avatar constructor has 3 params
+        var avatar = new Avatar(Vector2.of(0, 900), inputListener, imageReader);
 
-        var avatar = new Avatar(Vector2.of(0, 900), inputListener);
         setCamera(new Camera(avatar, Vector2.ZERO,
                 windowController.getWindowDimensions(), windowController.getWindowDimensions()));
         gameObjects().addGameObject(avatar);
@@ -64,8 +66,11 @@ class Avatar extends GameObject {
 
     private UserInputListener inputListener;
 
-    public Avatar(Vector2 pos, UserInputListener inputListener) {
-        super(pos, Vector2.ONES.mult(50), new OvalRenderable(AVATAR_COLOR));
+    public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
+        //todo: make sure image rendering is done properly
+        super(pos, Vector2.ONES.mult(50),
+            new ImageRenderable(imageReader.readImage
+                    ("assets/idle_0.png", false).getImage()));
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
         this.inputListener = inputListener;

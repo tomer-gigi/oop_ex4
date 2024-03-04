@@ -18,7 +18,7 @@ import pepse.world.daylight.Sun;
 import pepse.world.daylight.SunHalo;
 
 public class PepseGameManager extends GameManager {
-
+    //todo: full screen?
     private static final float MIDNIGHT_OPACITY = 0.9f;
     private static final float MORNING_OPACITY = 0f;
     private static final float DAY_CYCLE_LENGTH = 30f;
@@ -70,6 +70,10 @@ public class PepseGameManager extends GameManager {
         );
         GameObject sunHalo = SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo,Layer.BACKGROUND);
+        Avatar avatar = new Avatar(new Vector2
+                (windowController.getWindowDimensions().x()-60,
+                        0), inputListener, imageReader); //todo: set y to the height of terrain
+        gameObjects().addGameObject(avatar);
     }
 
     public static void main(String[] args){
