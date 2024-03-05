@@ -19,16 +19,17 @@ public class Avatar extends GameObject {
     private final AnimationRenderable idle;
     private final AnimationRenderable leftToRight;
     private final AnimationRenderable upAndDown; //used when the character goes up or down but not sideways
-
+    private final Runnable IJumped;
 
     private final UserInputListener inputListener;
 
-    public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader) {
+    public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader,Runnable jumpFunc) {
         //todo: make sure image rendering is done properly
         super(pos, Vector2.ONES.mult(50),
                 new ImageRenderable(imageReader.readImage
                         ("assets/idle_0.png", false).getImage()));
         this.imageReader = imageReader;
+        this.IJumped = jumpFunc;
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
         this.inputListener = inputListener;
@@ -79,6 +80,7 @@ public class Avatar extends GameObject {
         transform().setVelocityX(xVel);
         if(inputListener.isKeyPressed(KeyEvent.VK_SPACE) && getVelocity().y() == 0 && getEnergy()>=10){
             transform().setVelocityY(VELOCITY_Y);
+            IJumped.run();
             changeEnergy(-10);
         }if (isIdle()){
             changeEnergy(1);

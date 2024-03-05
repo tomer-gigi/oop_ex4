@@ -1,6 +1,8 @@
 package pepse.world.trees;
 
+import danogl.GameManager;
 import danogl.GameObject;
+import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -22,11 +24,13 @@ public class TreePlanter {
 
     private final Vector2 windowDimensions;
     private final Terrain terrain;
+    private GameObjectCollection gameObjectCollection;
 
 
-    public TreePlanter(Vector2 windowDimensions, Terrain terrain) {
+    public TreePlanter(Vector2 windowDimensions, Terrain terrain, GameObjectCollection gameObjectCollection) {
         this.windowDimensions = windowDimensions;
         this.terrain = terrain;
+        this.gameObjectCollection = gameObjectCollection;
     }
 
 
@@ -59,18 +63,18 @@ public List<List<GameObject>> getTrees(int minX, int maxX) {
             for (int k = 0; k <LEAF_RADIUS*2; k++) {
                 double coinFlip = Math.random();
                 if (coinFlip < 0.6) {
-                    Flora.Leaf block = new Flora.Leaf(
+                    Flora.Leaf leaf = new Flora.Leaf(
                             new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ) );
                     new ScheduledTask(
-                            block,
+                            leaf,
                             (float) Math.random(),
                             true,
-                            block::wiggle
+                            leaf::wiggle
                     );
-                    blockList.add(block);
-                } else if (coinFlip>0.9) {
+                    blockList.add(leaf);
+                } if (coinFlip<0.015 || coinFlip>0.985) {
                     Flora.Fruit fruit = new Flora.Fruit(
-                            new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ));
+                            new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ),gameObjectCollection);
                     blockList.add(fruit);
                 }
             }

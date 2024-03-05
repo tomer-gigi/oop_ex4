@@ -1,10 +1,16 @@
 package pepse.world.trees;
 
+import danogl.GameManager;
 import danogl.GameObject;
+import danogl.collisions.Collision;
+import danogl.collisions.GameObjectCollection;
+import danogl.components.ScheduledTask;
+import danogl.components.Transition;
 import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
+import pepse.world.Avatar;
 import pepse.world.Block;
 
 import java.awt.*;
@@ -12,13 +18,28 @@ import java.util.Random;
 
 public class Flora {
     public static class Fruit extends GameObject {
-    
-    
-        public Fruit(Vector2 topLeftCorner) {
+        private GameObjectCollection gameObjectCollection;
+
+        @Override
+        public void onCollisionEnter(GameObject other, Collision collision) {
+            super.onCollisionEnter(other, collision);
+            if(other instanceof Avatar){
+                ((Avatar)other).changeEnergy(10f);
+                new ScheduledTask(
+                        other,
+                        1f,
+                        false,
+                        () ->gameObjectCollection.addGameObject(this)
+                );
+                this.gameObjectCollection.removeGameObject(this);
+            }
+
+        }
+
+        public Fruit(Vector2 topLeftCorner, GameObjectCollection gameObjectCollection) {
             super(topLeftCorner, Vector2.ONES.mult(Block.SIZE),
                     new OvalRenderable(Color.RED));
-    
-    
+            this.gameObjectCollection = gameObjectCollection;
         }
     }
 
@@ -48,7 +69,19 @@ public class Flora {
                 this.setDimensions(this.getDimensions().subtract(Vector2.ONES.mult(0.001f)));
             }
         }
-    
+        public void speen90(){
+            new Transition<>(
+                    this,//thegameobjectbeingchanged
+                    (Float angle)-> this.renderer().setRenderableAngle(angle), //themethodtocall
+                    this.renderer().getRenderableAngle(), //initialtransitionvalue
+                    this.renderer().getRenderableAngle()+90f, //finaltransitionvalue
+                    Transition.LINEAR_INTERPOLATOR_FLOAT,//useacubicinterpolator
+                    1f, //transitionfullyoverhalfaday
+                    Transition.TransitionType.TRANSITION_ONCE,//ChooseappropriateENUMvalue
+                    null//nothingfurthertoexecuteuponreachingfinalvalu
+            );
+
+        }
         public void wiggle(){
             Random random = new Random();
             double coinFlip = random.nextDouble();
