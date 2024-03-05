@@ -1,39 +1,31 @@
 package pepse;
 
-import danogl.gui.rendering.TextRenderable;
-import pepse.world.*;
+
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.ScheduledTask;
 import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
+import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import pepse.world.Block;
-import pepse.world.Sky;
-import pepse.world.Terrain;
+import pepse.world.*;
 import pepse.world.daylight.Night;
 import pepse.world.daylight.Sun;
 import pepse.world.daylight.SunHalo;
+import pepse.world.trees.TreePlanter;
 
 public class PepseGameManager extends GameManager {
     //todo: full screen?
-    private static final float MIDNIGHT_OPACITY = 0.9f;
+    private static final float MIDNIGHT_OPACITY = 0.1f;
     private static final float MORNING_OPACITY = 0f;
     private static final float DAY_CYCLE_LENGTH = 30f;
 
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
-    }
-    public PepseGameManager(String windowTitle) {
-        super (windowTitle);
-    }
-
-    @Override
-    public void update(float deltaTime) {
-        super.update(deltaTime);
     }
 
     @Override
@@ -43,7 +35,7 @@ public class PepseGameManager extends GameManager {
         GameObject sky = Sky.create(dimensions);
         gameObjects().addGameObject(sky, Layer.BACKGROUND);
         Terrain terrain = new Terrain(dimensions,1);
-        for (Block block : terrain.createInRange(0,(int)dimensions.x())){
+        for (Block block : terrain.createInRange(0,(int)(dimensions.x()/Block.SIZE))){
             gameObjects().addGameObject(block,Layer.STATIC_OBJECTS);
         }
         GameObject night = Night.create(dimensions, DAY_CYCLE_LENGTH);
@@ -79,16 +71,26 @@ public class PepseGameManager extends GameManager {
         );
         GameObject sunHalo = SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo,Layer.BACKGROUND);
+        TreePlanter planter = new TreePlanter(dimensions,terrain);
+        var trees = planter.getTrees(0,(int)(dimensions.x()/Block.SIZE));
+        for(var stumps  :trees.get(0)){
+                gameObjects().addGameObject(stumps,Layer.STATIC_OBJECTS);
+        }
+        for(var leafs  :trees.get(1)){
+                gameObjects().addGameObject(leafs,Layer.FOREGROUND-1);
+        }
         Avatar avatar = new Avatar(windowController.getWindowDimensions().mult(0.5f), inputListener, imageReader);
         gameObjects().addGameObject(avatar);
         TextRenderable energyText = new TextRenderable("100% ", "Calibri", false, true);
         EnergyCounter energyCounter = new EnergyCounter(Vector2.ZERO, new Vector2(60,60),
                 energyText,avatar::getEnergy);
         gameObjects().addGameObject(energyCounter);
+
+
+
     }
 
     public static void main(String[] args){
-        new PepseGameManager("pepse",new Vector2(600f,800f)).run();
-
+        new PepseGameManager("pepse",new Vector2(800f,500f)).run();
     }
 }
