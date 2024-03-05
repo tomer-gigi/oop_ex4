@@ -20,8 +20,7 @@ import pepse.world.trees.TreePlanter;
 
 public class PepseGameManager extends GameManager {
     //todo: full screen?
-    private static final float MIDNIGHT_OPACITY = 0.1f;
-    private static final float MORNING_OPACITY = 0f;
+
     private static final float DAY_CYCLE_LENGTH = 30f;
 
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
