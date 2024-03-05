@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Terrain {
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
-    private static final int TERRAIN_DEPTH = 5;
+    private static final int TERRAIN_DEPTH = 20;
     float groundHeightAtX0;
     private final Vector2 windowDimensions;
 

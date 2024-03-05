@@ -1,6 +1,7 @@
 package pepse;
 
-
+import danogl.gui.rendering.TextRenderable;
+import pepse.world.*;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
@@ -25,6 +26,14 @@ public class PepseGameManager extends GameManager {
 
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
+    }
+    public PepseGameManager(String windowTitle) {
+        super (windowTitle);
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
     }
 
     @Override
@@ -70,13 +79,16 @@ public class PepseGameManager extends GameManager {
         );
         GameObject sunHalo = SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo,Layer.BACKGROUND);
-        Avatar avatar = new Avatar(new Vector2
-                (windowController.getWindowDimensions().x()-60,
-                        0), inputListener, imageReader); //todo: set y to the height of terrain
+        Avatar avatar = new Avatar(windowController.getWindowDimensions().mult(0.5f), inputListener, imageReader);
         gameObjects().addGameObject(avatar);
+        TextRenderable energyText = new TextRenderable("100% ", "Calibri", false, true);
+        EnergyCounter energyCounter = new EnergyCounter(Vector2.ZERO, new Vector2(60,60),
+                energyText,avatar::getEnergy);
+        gameObjects().addGameObject(energyCounter);
     }
 
     public static void main(String[] args){
-        new PepseGameManager("pepse",new Vector2(400f,400f)).run();
+        new PepseGameManager("pepse",new Vector2(600f,800f)).run();
+
     }
 }
