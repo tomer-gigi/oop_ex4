@@ -32,45 +32,26 @@ public class PepseGameManager extends GameManager {
     public void initializeGame(ImageReader imageReader, SoundReader soundReader, UserInputListener inputListener, WindowController windowController) {
         super.initializeGame(imageReader, soundReader, inputListener, windowController);
         Vector2 dimensions =windowController.getWindowDimensions();
+        // create sky
         GameObject sky = Sky.create(dimensions);
         gameObjects().addGameObject(sky, Layer.BACKGROUND);
+        // create ground
         Terrain terrain = new Terrain(dimensions,1);
         for (Block block : terrain.createInRange(0,(int)(dimensions.x()/Block.SIZE))){
             gameObjects().addGameObject(block,Layer.STATIC_OBJECTS);
         }
+        //create night
         GameObject night = Night.create(dimensions, DAY_CYCLE_LENGTH);
         gameObjects().addGameObject(night,Layer.FOREGROUND);
-        new Transition<>(
-                night,//thegameobjectbeingchanged
-                night.renderer()::setOpaqueness, //themethodtocall
-                MORNING_OPACITY, //initialtransitionvalue
-                MIDNIGHT_OPACITY, //finaltransitionvalue
-                Transition.CUBIC_INTERPOLATOR_FLOAT,//useacubicinterpolator
-                DAY_CYCLE_LENGTH, //transitionfullyoverhalfaday
-                Transition.TransitionType.TRANSITION_BACK_AND_FORTH,//ChooseappropriateENUMvalue
-                null//nothingfurthertoexecuteuponreachingfinalvalu
-        );
 
+        // create sun and Halo
         GameObject sun = Sun.create(dimensions,DAY_CYCLE_LENGTH);
         gameObjects().addGameObject(sun,Layer.BACKGROUND);
-        Vector2 initialSunCenter = sun.getCenter();
-        new Transition<>(
-                sun,//thegameobjectbeingchanged
-                (Float angle)-> sun.setCenter(
-                                initialSunCenter.subtract(dimensions.mult(0.5f))
-                                .rotated(angle)
-                                .add(dimensions.mult(0.5f)
-                                )
-                        ), //themethodtocall
-                0f, //initialtransitionvalue
-                360f, //finaltransitionvalue
-                Transition.LINEAR_INTERPOLATOR_FLOAT,//useacubicinterpolator
-                DAY_CYCLE_LENGTH*2f, //transitionfullyoverhalfaday
-                Transition.TransitionType.TRANSITION_LOOP,//ChooseappropriateENUMvalue
-                null//nothingfurthertoexecuteuponreachingfinalvalu
-        );
+
         GameObject sunHalo = SunHalo.create(sun);
         gameObjects().addGameObject(sunHalo,Layer.BACKGROUND);
+
+        //create trees leafs fruits and stumps
         TreePlanter planter = new TreePlanter(dimensions,terrain);
         var trees = planter.getTrees(0,(int)(dimensions.x()/Block.SIZE));
         for(var stumps  :trees.get(0)){
@@ -79,6 +60,8 @@ public class PepseGameManager extends GameManager {
         for(var leafs  :trees.get(1)){
                 gameObjects().addGameObject(leafs,Layer.FOREGROUND-1);
         }
+
+        // create avatar
         Avatar avatar = new Avatar(windowController.getWindowDimensions().mult(0.5f), inputListener, imageReader);
         gameObjects().addGameObject(avatar);
         TextRenderable energyText = new TextRenderable("100% ", "Calibri", false, true);
