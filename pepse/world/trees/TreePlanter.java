@@ -63,7 +63,7 @@ public List<List<GameObject>> getTrees(int minX, int maxX) {
                             new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ) );
                     new ScheduledTask(
                             block,
-                            0.1f,
+                            (float) Math.random(),
                             true,
                             block::wiggle
                     );
