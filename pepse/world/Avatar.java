@@ -40,7 +40,7 @@ public class Avatar extends GameObject {
         return getVelocity().y() == 0&&getVelocity().x() == 0;
     }
     private boolean isWalking(){
-        return getVelocity().y()== 0&&getVelocity().x()!= 0;
+        return getVelocity().x()!= 0;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class Avatar extends GameObject {
             changeEnergy(-10);
         }if (isIdle()){
             changeEnergy(1);
-        }if (isWalking()){
+        }if (isWalking()){ //including walking in the air
             changeEnergy(-0.5f);
         }
 
