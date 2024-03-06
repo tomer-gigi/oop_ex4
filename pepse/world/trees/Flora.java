@@ -1,6 +1,5 @@
 package pepse.world.trees;
 
-import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
@@ -18,16 +17,16 @@ import java.util.Random;
 
 public class Flora {
     public static class Fruit extends GameObject {
-        private GameObjectCollection gameObjectCollection;
+        private final GameObjectCollection gameObjectCollection;
 
         @Override
         public void onCollisionEnter(GameObject other, Collision collision) {
             super.onCollisionEnter(other, collision);
-            if(other instanceof Avatar){
+            if(other.getTag().equals("avatar")){
                 ((Avatar)other).changeEnergy(10f);
                 new ScheduledTask(
                         other,
-                        1f,
+                        30f,
                         false,
                         () ->gameObjectCollection.addGameObject(this)
                 );
@@ -40,6 +39,7 @@ public class Flora {
             super(topLeftCorner, Vector2.ONES.mult(Block.SIZE),
                     new OvalRenderable(Color.RED));
             this.gameObjectCollection = gameObjectCollection;
+            setTag("fruit");
         }
     }
 
@@ -48,6 +48,7 @@ public class Flora {
         private static final Color BASE_LEAF_COLOR = new Color(50, 200, 30);
         public Leaf(Vector2 topLeftCorner) {
             super(topLeftCorner,Vector2.ONES.mult(SIZE), new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR)));
+            setTag("leaf");
         }
     
         public void wiggleAngle(){
@@ -69,7 +70,7 @@ public class Flora {
                 this.setDimensions(this.getDimensions().subtract(Vector2.ONES.mult(0.001f)));
             }
         }
-        public void speen90(){
+        public void spin90(){
             new Transition<>(
                     this,//thegameobjectbeingchanged
                     (Float angle)-> this.renderer().setRenderableAngle(angle), //themethodtocall

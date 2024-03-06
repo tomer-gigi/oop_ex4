@@ -42,6 +42,7 @@ public class Avatar extends GameObject {
         leftToRight = new AnimationRenderable(new String[]
                 {"assets/run_0.png","assets/run_1.png", "assets/run_2.png",
                 "assets/run_3.png","assets/run_4.png"},imageReader, false, 0.1f);
+        setTag("avatar");
     }
     public float getEnergy(){
         return energy;
@@ -56,8 +57,11 @@ public class Avatar extends GameObject {
     private boolean isIdle(){
         return getVelocity().y() == 0&&getVelocity().x() == 0;
     }
-    private boolean isWalking(){
-        return getVelocity().x()!= 0;
+    private boolean isWalkingRightToLeft(){
+        return getVelocity().x()> 0;
+    }
+    private boolean isWalkingLeftToRight(){
+        return getVelocity().x()< 0;
     }
 
     /**
@@ -85,10 +89,16 @@ public class Avatar extends GameObject {
         }if (isIdle()){
             changeEnergy(1);
             renderer().setRenderable(idle);
-        }if (isWalking()){ //including walking in the air
+        }if (isWalkingLeftToRight()){ //including walking in the air
             changeEnergy(-0.5f);
             renderer().setRenderable(leftToRight);
-        }if (isUpAndDown()){
+            renderer().setIsFlippedHorizontally(true);
+        }if (isWalkingRightToLeft()){
+            changeEnergy(-0.5f);
+            renderer().setRenderable(leftToRight);
+            renderer().setIsFlippedHorizontally(false);
+        }
+        if (isUpAndDown()){
             renderer().setRenderable(upAndDown);
         }
 

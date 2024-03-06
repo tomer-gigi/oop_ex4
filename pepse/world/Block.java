@@ -12,5 +12,6 @@ public class Block extends GameObject {
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         physics().setMass(GameObjectPhysics.IMMOVABLE_MASS);
     }
+
 }
 

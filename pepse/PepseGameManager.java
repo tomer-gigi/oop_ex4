@@ -4,8 +4,6 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
-import danogl.components.ScheduledTask;
-import danogl.components.Transition;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
@@ -30,23 +28,26 @@ public class PepseGameManager extends GameManager {
     private static List<GameObject> flora;
     static int jumps = 0;
     static private Color[] appleColors = {Color.YELLOW,Color.RED};
+    private static List<GameObject> stumps;
 
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
     }
     static void jumpUpdate(){
         for(var leafs  :flora){
-            if (leafs instanceof Flora.Leaf){
+            if (leafs.getTag().equals("leaf")){
                 Flora.Leaf a = (Flora.Leaf) leafs;
-                a.speen90();
+                a.spin90();
             }
-            if( leafs instanceof Flora.Fruit){
+            if( leafs.getTag().equals("fruit")){
                 Flora.Fruit a = (Flora.Fruit) leafs;
                 Color color= appleColors[jumps%2];
                 a.renderer().setRenderable(new OvalRenderable(color));
             }
-
         }
+//        for (var stump  :stumps){
+//            for (var block: )
+//        }
         jumps++;
     }
     @Override
@@ -84,6 +85,7 @@ public class PepseGameManager extends GameManager {
 
         }
         flora = trees.get(1);
+        this.stumps = trees.get(0);
 
 
         // create avatar
@@ -101,6 +103,6 @@ public class PepseGameManager extends GameManager {
     }
 
     public static void main(String[] args){
-        new PepseGameManager("pepse",new Vector2(800f,500f)).run();
+        new PepseGameManager("pepse",new Vector2(1200f,800f)).run();
     }
 }
