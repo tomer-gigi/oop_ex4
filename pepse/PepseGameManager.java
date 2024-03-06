@@ -4,11 +4,13 @@ package pepse;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.RendererComponent;
 import danogl.gui.ImageReader;
 import danogl.gui.SoundReader;
 import danogl.gui.UserInputListener;
 import danogl.gui.WindowController;
 import danogl.gui.rendering.OvalRenderable;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 import pepse.world.*;
@@ -18,17 +20,19 @@ import pepse.world.daylight.SunHalo;
 import pepse.world.trees.Flora;
 import pepse.world.trees.TreePlanter;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.Random;
 
 public class PepseGameManager extends GameManager {
-    //todo: full screen?
 
     private static final float DAY_CYCLE_LENGTH = 30f;
     private static List<GameObject> flora;
     static int jumps = 0;
-    static private Color[] appleColors = {Color.YELLOW,Color.RED};
+    static private final Color[] appleColors = {Color.YELLOW,Color.RED};
     private static List<GameObject> stumps;
+    private static Random rand = new Random();
 
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
@@ -45,9 +49,21 @@ public class PepseGameManager extends GameManager {
                 a.renderer().setRenderable(new OvalRenderable(color));
             }
         }
-//        for (var stump  :stumps){
-//            for (var block: )
-//        }
+        String currentStump = "";
+        int colorChange = rand.nextInt(7)-3;
+        for (GameObject block  :stumps){
+            RendererComponent r= block.renderer();
+            if (!block.getTag().equals(currentStump)){
+                currentStump = block.getTag();
+                colorChange = rand.nextInt(7)-3;
+                block.renderer().setRenderable(new RectangleRenderable(
+                        new Color(100+colorChange, 50+colorChange, 20+colorChange)));
+            }else{
+                block.renderer().setRenderable(new RectangleRenderable(
+                        new Color(100+colorChange, 50+colorChange, 20+colorChange)));
+            }
+            currentStump = currentStump;
+        }
         jumps++;
     }
     @Override
@@ -85,7 +101,7 @@ public class PepseGameManager extends GameManager {
 
         }
         flora = trees.get(1);
-        this.stumps = trees.get(0);
+        stumps = trees.get(0);
 
 
         // create avatar

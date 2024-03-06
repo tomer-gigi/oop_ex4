@@ -90,6 +90,7 @@ public List<List<GameObject>> getTrees(int minX, int maxX) {
                 new Vector2(blockIndex * Block.SIZE, startingHeight - i * Block.SIZE),
                 new RectangleRenderable(ColorSupplier.approximateColor(BASE_STUMP_COLOR))
         );
+        block.setTag(Integer.toString(blockIndex));
         blockList.add(block);
     }
     return blockList;
