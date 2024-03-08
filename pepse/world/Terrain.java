@@ -1,6 +1,5 @@
 package pepse.world;
 
-import danogl.GameObject;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
@@ -18,13 +17,11 @@ public class Terrain {
     private static final int NOISE_FACTOR = 200;
     private static final int SCREEN_BUFFER = 2;
     float groundHeightAtX0;
-    private final Vector2 windowDimensions;
     private final NoiseGenerator noiseGenerator;
 
 
     public Terrain( Vector2 windowDimensions, int seed){
         this.groundHeightAtX0 = windowDimensions.y()* (2f/3f);
-        this.windowDimensions = windowDimensions;
         this.noiseGenerator = new NoiseGenerator(seed,(int)groundHeightAtX0);
 
 

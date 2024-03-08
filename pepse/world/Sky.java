@@ -10,12 +10,18 @@ import java.awt.*;
 public class Sky {
     private static final Color BASIC_SKY_COLOR= Color.decode("#80C6E5");
 
-    public static GameObject create(Vector2 windowDimensions){
-        GameObject sky = new GameObject(
-                Vector2.ZERO, windowDimensions,
-                new RectangleRenderable(BASIC_SKY_COLOR));
-        sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        sky.setTag("sky");
-        return sky;
-    }
+    /**
+ * Creates a sky object with the given dimensions and color.
+ *
+ * @param windowDimensions the dimensions of the window
+ * @return the sky object
+ */
+public static GameObject create(Vector2 windowDimensions) {
+    GameObject sky = new GameObject(
+            Vector2.ZERO, windowDimensions,
+            new RectangleRenderable(BASIC_SKY_COLOR));
+    sky.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
+    sky.setTag("sky");
+    return sky;
+}
 }

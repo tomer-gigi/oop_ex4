@@ -1,99 +1,97 @@
 package pepse.world.trees;
 
 import danogl.GameObject;
-import danogl.collisions.Collision;
 import danogl.collisions.GameObjectCollection;
-import danogl.components.ScheduledTask;
-import danogl.components.Transition;
-import danogl.gui.rendering.OvalRenderable;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.util.Vector2;
 import pepse.util.ColorSupplier;
-import pepse.world.Avatar;
 import pepse.world.Block;
+import pepse.world.Terrain;
 
 import java.awt.*;
-import java.util.Random;
-
+import java.util.*;
+import java.util.List;
+import danogl.components.ScheduledTask;
 public class Flora {
-    public static class Fruit extends GameObject {
-        private final GameObjectCollection gameObjectCollection;
 
-        @Override
-        public void onCollisionEnter(GameObject other, Collision collision) {
-            super.onCollisionEnter(other, collision);
-            if(other.getTag().equals("avatar")){
-                ((Avatar)other).changeEnergy(10f);
-                new ScheduledTask(
-                        other,
-                        30f,
-                        false,
-                        () ->gameObjectCollection.addGameObject(this)
-                );
-                this.gameObjectCollection.removeGameObject(this);
-            }
+    private static final Color BASE_STUMP_COLOR = new Color(100, 50, 20);
 
-        }
+    private static final int STUMP_HIGHT = 3;
+    private static final int LEAF_RADIUS = 2;
 
-        public Fruit(Vector2 topLeftCorner, GameObjectCollection gameObjectCollection) {
-            super(topLeftCorner, Vector2.ONES.mult(Block.SIZE),
-                    new OvalRenderable(Color.RED));
-            this.gameObjectCollection = gameObjectCollection;
-            setTag("fruit");
-        }
+
+    private final Terrain terrain;
+    private final GameObjectCollection gameObjectCollection;
+
+
+    public Flora(Terrain terrain, GameObjectCollection gameObjectCollection) {
+
+        this.terrain = terrain;
+        this.gameObjectCollection = gameObjectCollection;
     }
 
-    public static class Leaf extends GameObject {
-        public static final int SIZE = 30;
-        private static final Color BASE_LEAF_COLOR = new Color(50, 200, 30);
-        public Leaf(Vector2 topLeftCorner) {
-            super(topLeftCorner,Vector2.ONES.mult(SIZE), new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR)));
-            setTag("leaf");
-        }
-    
-        public void wiggleAngle(){
-            Random random = new Random();
-            double coinFlip = random.nextDouble();
-            if (coinFlip<0.2){
-                this.renderer().setRenderableAngle(this.renderer().getRenderableAngle()+1.5f);}
-            else if (coinFlip>0.8) {
-                this.renderer().setRenderableAngle(this.renderer().getRenderableAngle()-1.5f);
-            }
-        }
-        public void wiggleDimensions(){
-            Random random = new Random();
-            double coinFlip = random.nextDouble();
-            if (coinFlip<0.5){
-                this.setDimensions(this.getDimensions().add(Vector2.ONES.mult(0.001F)));
-            }
-            else if (coinFlip>0.5) {
-                this.setDimensions(this.getDimensions().subtract(Vector2.ONES.mult(0.001f)));
-            }
-        }
-        public void spin90(){
-            new Transition<>(
-                    this,//thegameobjectbeingchanged
-                    (Float angle)-> this.renderer().setRenderableAngle(angle), //themethodtocall
-                    this.renderer().getRenderableAngle(), //initialtransitionvalue
-                    this.renderer().getRenderableAngle()+90f, //finaltransitionvalue
-                    Transition.LINEAR_INTERPOLATOR_FLOAT,//useacubicinterpolator
-                    1f, //transitionfullyoverhalfaday
-                    Transition.TransitionType.TRANSITION_ONCE,//ChooseappropriateENUMvalue
-                    null//nothingfurthertoexecuteuponreachingfinalvalu
-            );
 
-        }
-        public void wiggle(){
-            Random random = new Random();
-            double coinFlip = random.nextDouble();
-            if (coinFlip<0.5){
-                wiggleAngle();
-            }
-            else if (coinFlip>0.5) {
-                wiggleDimensions();
-            }
-    
-    
+
+public List<List<GameObject>> createInRange(int minX, int maxX) {
+    List<GameObject> stumpBlockList = new ArrayList<>();
+    List<GameObject> leafBlockList = new ArrayList<>();
+    int lastTree = -10;
+    for (int i = minX; i < maxX; i++) {
+        double coinFlip = Math.random();
+        if (coinFlip < 0.2 && i-lastTree>2) {
+            List<GameObject> stump = createStump(i);
+            List<GameObject> leafs = createLeafs(i);
+            stumpBlockList.addAll(stump);
+            leafBlockList.addAll(leafs);
+            lastTree = i;
         }
     }
+    List<List<GameObject>> stumpsAndLeafs = new ArrayList<>();
+    stumpsAndLeafs.add(stumpBlockList);
+    stumpsAndLeafs.add(leafBlockList);
+    return stumpsAndLeafs;
+
+}
+    private List<GameObject> createLeafs(int i) {
+        List<GameObject> blockList = new ArrayList<>();
+        float Xstart = (float)(i -LEAF_RADIUS+0.5)*Block.SIZE;
+        int Ystart = (int)terrain.groundHeightAt((float) i)-(STUMP_HIGHT+LEAF_RADIUS+1)*Block.SIZE;
+        for (int j = 0; j < LEAF_RADIUS*2; j++) {
+            for (int k = 0; k <LEAF_RADIUS*2; k++) {
+                double coinFlip = Math.random();
+                if (coinFlip < 0.6) {
+                    Leaf leaf = new Leaf(
+                            new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ) );
+                    new ScheduledTask(
+                            leaf,
+                            (float) Math.random(),
+                            true,
+                            leaf::wiggle
+                    );
+                    blockList.add(leaf);
+                } if (coinFlip<0.015 || coinFlip>0.985) {
+
+                    Fruit fruit = new Fruit(
+                            new Vector2(Xstart+j*Block.SIZE,Ystart+k*Block.SIZE ),
+                            gameObjectCollection);
+                    blockList.add(fruit);
+                }
+            }
+        }
+        return blockList;
+    }
+
+    public List<GameObject> createStump(int blockIndex) {
+    List<GameObject> blockList = new ArrayList<>();
+    float startingHeight = terrain.groundHeightAt((float) blockIndex);
+    for (int i = 1; i < STUMP_HIGHT + 1; i++) {
+        Block stumpBlock = new Block(
+                new Vector2(blockIndex * Block.SIZE, startingHeight - i * Block.SIZE),
+                new RectangleRenderable(ColorSupplier.approximateColor(BASE_STUMP_COLOR))
+        );
+        stumpBlock.setTag(Integer.toString(blockIndex));
+        blockList.add(stumpBlock);
+    }
+    return blockList;
+}
 }

@@ -6,14 +6,14 @@ import danogl.gui.rendering.AnimationRenderable;
 import danogl.gui.rendering.ImageRenderable;
 import danogl.util.Vector2;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Avatar extends GameObject {
     private static final float VELOCITY_X = 400;
     private static final float VELOCITY_Y = -650;
     private static final float GRAVITY = 600;
-    private final ImageReader imageReader;
+    private static final String IDLE_PATH = "assets/idle_0.png";
+
     private float energy = 100;
 //    private static final Color AVATAR_COLOR = Color.DARK_GRAY;
     private final AnimationRenderable idle;
@@ -24,11 +24,9 @@ public class Avatar extends GameObject {
     private final UserInputListener inputListener;
 
     public Avatar(Vector2 pos, UserInputListener inputListener, ImageReader imageReader,Runnable jumpFunc) {
-        //todo: make sure image rendering is done properly
         super(pos, Vector2.ONES.mult(50),
                 new ImageRenderable(imageReader.readImage
-                        ("assets/idle_0.png", false).getImage()));
-        this.imageReader = imageReader;
+                        (IDLE_PATH, false).getImage()));
         this.IJumped = jumpFunc;
         physics().preventIntersectionsFromDirection(Vector2.ZERO);
         transform().setAccelerationY(GRAVITY);
