@@ -1,4 +1,4 @@
-package pepse.world.daylight;
+package pepse.world.daynight;
 
 import danogl.GameObject;
 import danogl.components.CoordinateSpace;
@@ -13,7 +13,7 @@ public class Night {
     private static final float MORNING_OPACITY = 0f;
 
 
-    public static GameObject create(Vector2 windowDimensions, float cycleLength){
+    public static GameObject create(Vector2 windowDimensions, float cycleLength) {
         GameObject night = new GameObject(
                 Vector2.ZERO, windowDimensions,
                 new RectangleRenderable(Color.BLACK));
@@ -26,7 +26,7 @@ public class Night {
                 MORNING_OPACITY,
                 MIDNIGHT_OPACITY,
                 Transition.CUBIC_INTERPOLATOR_FLOAT,
-                cycleLength/2,
+                cycleLength / 2,
                 Transition.TransitionType.TRANSITION_BACK_AND_FORTH,
                 null
         );

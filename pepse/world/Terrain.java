@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class Terrain {
     private static final Color BASE_GROUND_COLOR = new Color(212, 123, 74);
     private static final int TERRAIN_DEPTH = 20;
@@ -20,24 +19,26 @@ public class Terrain {
     private final NoiseGenerator noiseGenerator;
 
 
-    public Terrain( Vector2 windowDimensions, int seed){
-        this.groundHeightAtX0 = windowDimensions.y()* (2f/3f);
-        this.noiseGenerator = new NoiseGenerator(seed,(int)groundHeightAtX0);
+    public Terrain(Vector2 windowDimensions, int seed) {
+        this.groundHeightAtX0 = windowDimensions.y() * (2f / 3f);
+        this.noiseGenerator = new NoiseGenerator(seed, (int) groundHeightAtX0);
 
 
     }
-    public float groundHeightAt(float x) {        float noise = (float) noiseGenerator.noise(x, Block.SIZE * NOISE_FACTOR);
-               return groundHeightAtX0 + noise;
+
+    public float groundHeightAt(float x) {
+        float noise = (float) noiseGenerator.noise(x, Block.SIZE * NOISE_FACTOR);
+        return groundHeightAtX0 + noise;
     }
 
     public List<Block> createInRange(int minX, int maxX) {
         List<Block> blocks = new ArrayList<>();
-        for (int blockIndex = minX- SCREEN_BUFFER; blockIndex <= maxX+SCREEN_BUFFER; blockIndex++) {
+        for (int blockIndex = minX - SCREEN_BUFFER; blockIndex <= maxX + SCREEN_BUFFER; blockIndex++) {
             for (int j = 0; j < TERRAIN_DEPTH; j++) {
                 Block block = new Block(
                         new Vector2(
-                                blockIndex*Block.SIZE,
-                                groundHeightAt((float)blockIndex)+j*Block.SIZE),
+                                blockIndex * Block.SIZE,
+                                groundHeightAt((float) blockIndex) + j * Block.SIZE),
                         new RectangleRenderable(ColorSupplier.approximateColor(
                                 BASE_GROUND_COLOR))
                 );
@@ -45,6 +46,6 @@ public class Terrain {
             }
 
         }
-         return blocks;
+        return blocks;
     }
 }

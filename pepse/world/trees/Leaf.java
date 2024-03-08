@@ -21,7 +21,8 @@ public class Leaf extends GameObject {
     private static final double PROBABILITY_TO_ROTATE_RIGHT = 0.5;
 
     public Leaf(Vector2 topLeftCorner) {
-        super(topLeftCorner, Vector2.ONES.mult(SIZE), new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR)));
+        super(topLeftCorner, Vector2.ONES.mult(SIZE),
+                new RectangleRenderable(ColorSupplier.approximateColor(BASE_LEAF_COLOR)));
         setTag("leaf");
     }
 
@@ -30,7 +31,7 @@ public class Leaf extends GameObject {
         float Angle = (float) random.nextGaussian() + MEAN_WIGGLE_ANGLE;
         if (coinFlip < PROBABILITY_TO_ROTATE_RIGHT) {
             this.renderer().setRenderableAngle(this.renderer().getRenderableAngle() + Angle);
-        } else  {
+        } else {
             this.renderer().setRenderableAngle(this.renderer().getRenderableAngle() - Angle);
         }
     }

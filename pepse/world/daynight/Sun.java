@@ -1,4 +1,4 @@
-package pepse.world.daylight;
+package pepse.world.daynight;
 
 import danogl.GameObject;
 import danogl.components.CoordinateSpace;
@@ -15,7 +15,7 @@ public class Sun {
     private static final float INITIAL_ANGLE_IN_SKY = 0f;
     private static final float FINAL_ANGLE_IN_SKY = 360f;
 
-    public static GameObject create(Vector2 windowDimensions, float cycleLength){
+    public static GameObject create(Vector2 windowDimensions, float cycleLength) {
         GameObject sun = new GameObject(
                 Vector2.ZERO,
                 SUN_DIMENSIONS,
@@ -26,14 +26,14 @@ public class Sun {
         sun.setCenter(
                 halfWindow.
                         add(Vector2.UP.
-                                mult((MinWindowDimension-SUN_DIMENSIONS.y())/2)));
+                                mult((MinWindowDimension - SUN_DIMENSIONS.y()) / 2)));
         sun.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
         sun.setTag("sun");
 
         Vector2 initialSunCenter = sun.getCenter();
         new Transition<>(
                 sun,
-                (Float angle)-> sun.setCenter(
+                (Float angle) -> sun.setCenter(
                         initialSunCenter.subtract(halfWindow)
                                 .rotated(angle)
                                 .add(halfWindow)
