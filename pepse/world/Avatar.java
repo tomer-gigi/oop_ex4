@@ -11,8 +11,8 @@ import java.awt.event.KeyEvent;
 
 public class Avatar extends GameObject {
     private static final float VELOCITY_X = 400;
-    private static final float VELOCITY_Y = -650;
-    private static final float GRAVITY = 600;
+    private static final float VELOCITY_Y = -550;
+    private static final float GRAVITY = 500;
     private static final String IDLE_PATH = "assets/idle_0.png";
 
     private float energy = 100;

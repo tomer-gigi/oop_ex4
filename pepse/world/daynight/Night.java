@@ -9,7 +9,7 @@ import danogl.util.Vector2;
 import java.awt.*;
 
 public class Night {
-    private static final float MIDNIGHT_OPACITY = 0.9f;
+    private static final float MIDNIGHT_OPACITY = 0.5f;
     private static final float MORNING_OPACITY = 0f;
 
 
