@@ -8,13 +8,21 @@ import danogl.util.Vector2;
 
 import java.awt.*;
 
+/**
+ * this class represents the sun - and has only one method (static) - create
+ */
 public class Sun {
 
-
-    private static final Vector2 SUN_DIMENSIONS = new Vector2(80f, 80f);
+    private static final Vector2 SUN_DIMENSIONS = new Vector2(80f, 80f); //dimensions for the sun
     private static final float INITIAL_ANGLE_IN_SKY = 0f;
     private static final float FINAL_ANGLE_IN_SKY = 360f;
-
+    /**
+     * Creates a sun game object with a sun transition.
+     *
+     * @param windowDimensions the dimensions of the window
+     * @param cycleLength the length of the sun cycle in seconds
+     * @return the sun game object
+     */
     public static GameObject create(Vector2 windowDimensions, float cycleLength) {
         GameObject sun = new GameObject(
                 Vector2.ZERO,

@@ -7,10 +7,19 @@ import danogl.util.Vector2;
 
 import java.awt.*;
 
+/**
+ * This class builds an halo for a given sun using the create function
+ */
 public class SunHalo {
-
+    private static final String HaloTag = "SunHalo";
     private static final Vector2 HALO_DIMENSION = new Vector2(100f, 100f);
     private static final Color HALO_COLOR = new Color(255, 255, 0, 20);
+    /**
+     * Creates a halo game object using the sun.
+     *
+     * @param sun the sun game object
+     * @return the sun halo game object
+     */
 
     public static GameObject create(GameObject sun) {
         GameObject sunHalo = new GameObject(
@@ -23,7 +32,7 @@ public class SunHalo {
 
         );
         sunHalo.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
-        sunHalo.setTag("sunHalo");
+        sunHalo.setTag(HaloTag);
         return sunHalo;
     }
 

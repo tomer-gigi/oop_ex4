@@ -2,12 +2,25 @@ tomer.gigi,arielb
 207936907,318812823
 
 1.
-we created leafs and fruits and energy counter
+we created a Flora class which is in charge of all the flora in the game - trees, leaves and fruits.
+the Flora class has a createInRange method, that creates all the trees in a given range, where for every
+block unit we toss a coin and can build a tree there.
+The trees are saved as a list of list of blocks, where the first part of the list is the list of
+blocks that compose the tree and the other part are the parts that compose the leaves.
+Leaves in this case are a different class as they have the wiggling (in the wind) functionality.
+when creating  the leaves, we randomly create fruits, using the Fruit class extending gameobject.
+The fruit class has a special functionality where whenever the avatar takes it,
+his energy increases (using a callback) and the fruit disappears for 30 seconds, using a scheduledTask.
 
-the connection between classes is :
+2.
+In addition to the mentioned before - Flora creates directly all the flora units.
+In the case of the stumps, it creates them as blocks.
+In the case of the leaves and the fruits it uses the matching class, to allow the special functionality
 
-we did not use any design pattern i think ? (should change ? can maybe make sky and night singeltons ?)
-
+3.
+We used callbacks in the package, it was used to give the avatar energy after taking the fruits,
+and to wiggle the leaves.
+In addition we used the ScheduledTask mechanism.
 
 
 

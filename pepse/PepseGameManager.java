@@ -25,20 +25,29 @@ import java.awt.*;
 import java.util.List;
 
 
+/**
+ * creates the components of the game, runs it and updates it
+ */
 public class PepseGameManager extends GameManager {
     private static final Color BASE_STUMP_COLOR = new Color(100, 50, 20);
-
     private static final float DAY_CYCLE_LENGTH = 30f;
-
     private static List<GameObject> leafs_N_fruits;
     static int jumps = 0;
     static private final Color[] FRUITS_COLORS = {Color.YELLOW, Color.RED, Color.MAGENTA};
     private static List<GameObject> stumps;
 
+    /**
+     * opens the window
+     * @param windowTitle - title of the new window
+     * @param windowDimensions - dimensions of the new window
+     */
     public PepseGameManager(String windowTitle, Vector2 windowDimensions) {
         super(windowTitle, windowDimensions);
     }
 
+    /**
+     * calls all the updates related to a jump
+     */
     static void jumpUpdate() {
         for (var leafFruit : leafs_N_fruits) {
             if (leafFruit.getTag().equals("leaf")) {
@@ -59,6 +68,18 @@ public class PepseGameManager extends GameManager {
 
     }
 
+    /**
+     * creates all the components of the game
+     * @param imageReader Contains a single method: readImage, which reads an image from disk.
+     *                 See its documentation for help.
+     * @param soundReader Contains a single method: readSound, which reads a wav file from
+     *                    disk. See its documentation for help.
+     * @param inputListener Contains a single method: isKeyPressed, which returns whether
+     *                      a given key is currently pressed by the user or not. See its
+     *                      documentation.
+     * @param windowController Contains an array of helpful, self explanatory methods
+     *                         concerning the window.
+     */
     @Override
     public void initializeGame(ImageReader imageReader,
                                SoundReader soundReader,
@@ -119,6 +140,10 @@ public class PepseGameManager extends GameManager {
 
     }
 
+    /**
+     * calls run which calls initializeGame and then updates the game
+     * @param args - not in  use
+     */
     public static void main(String[] args) {
 
         new PepseGameManager("pepse", new Vector2(1200f, 800f)).run();
